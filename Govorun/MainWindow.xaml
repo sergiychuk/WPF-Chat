@@ -1,0 +1,127 @@
+﻿<Window x:Class="Govorun.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        d:DataContext="{d:DesignInstance Type=local:ViewModel}"
+        xmlns:local="clr-namespace:Govorun"
+        mc:Ignorable="d"
+        Title="Говорун" Height="300" Width="350" MinWidth="250" MinHeight="250" Background="LightGray">
+    <Window.Resources>
+        <Style x:Key="TextBlockStyle" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Margin" Value="5,3,2,0"/>
+        </Style>
+        <Style x:Key="TextBoxStyle" TargetType="TextBox">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Margin" Value="0,5,0,0"/>
+            <Setter Property="Padding" Value="0,0,0,2"/>
+        </Style>
+        <Style x:Key="BorderConnectionStatusStyle" TargetType="Border">
+            <Setter Property="Margin" Value="0,5,0,0"/>
+            <Setter Property="BorderThickness" Value="5"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="CornerRadius" Value="90"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="SendTextBoxStyle" TargetType="TextBox">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Margin" Value="5,5,0,0"/>
+            <Setter Property="Padding" Value="0,0,0,2"/>
+        </Style>
+        <Style x:Key="SendButtonStyle" TargetType="Button">
+            <Setter Property="Padding" Value="0,0,0,1"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="5,5,5,0"/>
+            <Setter Property="Width" Value="70"/>
+            <Setter Property="Content" Value="Send"/>
+            <Setter Property="Background" Value="LightGreen"/>
+            <Setter Property="FontWeight" Value="DemiBold"/>
+            <Setter Property="FontSize" Value="15"/>
+        </Style>
+
+        <Style x:Key="DialogTextBlockStyle" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,3,0,0"/>
+            <Setter Property="Text" Value="Dialog:"/>
+            <Setter Property="FontWeight" Value="Heavy"/>
+            <Setter Property="FontSize" Value="15"/>
+        </Style>
+        <Style x:Key="DialogListBoxStyle" TargetType="ListBox">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Background" Value="LightCyan"/>
+            <Setter Property="BorderBrush" Value="SlateGray"/>
+        </Style>
+    </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Close" Executed="Exit_Executed"/>
+    </Window.CommandBindings>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0" Background="Gray">
+            <MenuItem Header="Settings" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                <MenuItem Header="Connect"/>
+                <Separator/>
+                <MenuItem Header="Exit" Command="Close" InputGestureText="Alt+F4"/>
+            </MenuItem>
+        </Menu>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Column="0" Grid.Row="0" Text="IP:" Style="{StaticResource TextBlockStyle}"/>
+            <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding IpAdress}" Style="{StaticResource TextBoxStyle}" />
+            <TextBlock Grid.Column="2" Grid.Row="0" Text="PORT:" Style="{StaticResource TextBlockStyle}"/>
+            <TextBox Grid.Column="3" Grid.Row="0" Text="{Binding Port}" Margin="0,5,5,0" Style="{StaticResource TextBoxStyle}"/>
+            <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource BorderConnectionStatusStyle}" />
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="0" Style="{StaticResource SendTextBoxStyle}" ToolTip="Type text here..." Text="{Binding Path=SendText, UpdateSourceTrigger=PropertyChanged}"/>
+            <Button Grid.Column="1" Style="{StaticResource SendButtonStyle}" Command="{Binding Path=SendMessageCmd}"/>
+        </Grid>
+        <Grid Grid.Row="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Style="{StaticResource DialogTextBlockStyle}"/>
+            <ListBox Grid.Row="1" Style="{StaticResource DialogListBoxStyle}" ItemsSource="{Binding Messages}" HorizontalContentAlignment="Stretch">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <DockPanel LastChildFill="True">
+                            <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center" HorizontalAlignment="Stretch" Text="{Binding Text}"/>
+                            <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center"  HorizontalAlignment="Right" Text="{Binding Time}"/>
+                        </DockPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+    </Grid>
+</Window>
